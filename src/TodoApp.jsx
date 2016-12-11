@@ -1,32 +1,13 @@
 import React from 'react';
-import AddTodo from './components/AddTodo'
-import TodoList from './components/TodoList'
+import AddTodo from './containers/AddTodo'
+import VisibleTodoList from './containers/VisibleTodoList'
 import Footer from './components/Footer'
-import store from './store';
-import getVisibleTodos from './reducers/get-visible-todos';
 
-let nextTodoId = 0;
-
-const TodoApp = ({ todos, visibilityFilter }) => {
+const TodoApp = () => {
   return (
     <div>
-      <AddTodo onAddClick={text =>
-          store.dispatch({
-            type: 'ADD_TODO',
-            id: nextTodoId++,
-            text
-          })
-        } />
-      <TodoList
-        todos={getVisibleTodos(todos, visibilityFilter)}
-        onTodoClick={
-          id => {
-            store.dispatch({
-              type: 'TOGGLE_TODO',
-              id
-            });
-          }
-        } />
+      <AddTodo />
+      <VisibleTodoList />
       <Footer />
     </div>
   );
