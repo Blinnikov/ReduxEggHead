@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import TodoApp from './TodoApp'
 import { createStore } from 'redux';
-import todoApp from './reducers/todo-app';
+import todoApp from './reducers';
+
+const store = createStore(todoApp);
 
 ReactDOM.render(
-  <Provider store={createStore(todoApp)}>
+  <Provider store={store}>
     <TodoApp />
   </Provider>,
   document.getElementById('root')
