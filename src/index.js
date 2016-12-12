@@ -1,15 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import TodoApp from './TodoApp'
+import App from './components/App'
 import { createStore } from 'redux';
 import todoApp from './reducers';
 
-const store = createStore(todoApp);
+const persistedState = {
+  todos: [{
+    id: '0',
+    text: 'From persisted storage',
+    completed: false
+  }]
+};
+
+const store = createStore(todoApp, persistedState);
+console.log(store.getState());
 
 ReactDOM.render(
   <Provider store={store}>
-    <TodoApp />
+    <App />
   </Provider>,
   document.getElementById('root')
 );
