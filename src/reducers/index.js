@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import todos from './todos';
+import todos, * as todoSelectors from './todos';
 
 // const todoApp = (state = {}, action) => {
 //   return {
@@ -24,3 +24,6 @@ const todoApp = combineReducers({
 });
 
 export default todoApp;
+
+export const getVisibleTodos = (state, filter) =>
+  todoSelectors.getVisibleTodos(state.todos, filter);
