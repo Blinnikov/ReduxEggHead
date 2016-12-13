@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 import todos from './todos';
-import visibilityFilter from './visibilityFilter';
 
 // const todoApp = (state = {}, action) => {
 //   return {
@@ -21,8 +20,7 @@ import visibilityFilter from './visibilityFilter';
 // };
 
 const todoApp = combineReducers({
-  todos,
-  visibilityFilter
+  todos
 });
 
 export default todoApp;
