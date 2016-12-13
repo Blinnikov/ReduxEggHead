@@ -3,10 +3,32 @@ import todoApp from './reducers';
 import { loadState, saveState } from './localStorage';
 import throttle from 'lodash/throttle';
 
+const addLoggingToDispatch = (store) => {
+  const dispatchOriginal = store.dispatch;
+  if (!console.group) {
+    return dispatchOriginal;
+  }
+
+  return (action) => {
+    console.group(action.type);
+    console.log('%c previous state', 'color: gray', store.getState());
+    console.log('%c action', 'color: blue', action);
+    const result = dispatchOriginal(action);
+    console.log('%c next state', 'color: green', store.getState());
+    console.groupEnd(action.type);
+    return result;
+  };
+};
+
 const configureStore = () => {
   const persistedState = loadState();
 
   const store = createStore(todoApp, persistedState);
+
+  if (process.env.NODE_ENV !== 'production') {
+    store.dispatch = addLoggingToDispatch(store);
+  }
+
   store.subscribe(throttle(() => {
     saveState({
         todos: store.getState().todos
