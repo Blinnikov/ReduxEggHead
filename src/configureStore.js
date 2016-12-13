@@ -2,6 +2,11 @@ import { createStore } from 'redux';
 import todoApp from './reducers';
 import { loadState, saveState } from './localStorage';
 import throttle from 'lodash/throttle';
+import { fetchTodos } from './api';
+
+fetchTodos('all').then(todos => {
+  console.log(todos);
+});
 
 const addLoggingToDispatch = (store) => {
   const dispatchOriginal = store.dispatch;
