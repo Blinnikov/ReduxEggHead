@@ -25,6 +25,18 @@ const addLoggingToDispatch = (store) => {
   };
 };
 
+const addPromiseSupportToDispatch = (store) => {
+  const dispatchOriginal = store.dispatch;
+
+  return (action) => {
+    if (typeof action.then === 'function') {
+      return action.then(dispatchOriginal);
+    }
+
+    return dispatchOriginal(action);
+  };
+};
+
 const configureStore = () => {
   const persistedState = loadState();
 
@@ -34,11 +46,13 @@ const configureStore = () => {
     store.dispatch = addLoggingToDispatch(store);
   }
 
-  store.subscribe(throttle(() => {
-    saveState({
-        todos: store.getState().todos
-    });
-  }, 1000));
+  store.dispatch = addPromiseSupportToDispatch(store);
+
+  // store.subscribe(throttle(() => {
+  //   saveState({
+  //       todos: store.getState().todos
+  //   });
+  // }, 1000));
 
   return store;
 }
