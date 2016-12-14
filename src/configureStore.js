@@ -1,58 +1,45 @@
 import { createStore } from 'redux';
 import todoApp from './reducers';
-import { loadState, saveState } from './localStorage';
-import throttle from 'lodash/throttle';
-import { fetchTodos } from './api';
 
-fetchTodos('all').then(todos => {
-  console.log(todos);
-});
-
-const addLoggingToDispatch = (store) => {
-  const dispatchOriginal = store.dispatch;
+const logger = (store) => (next) => {
   if (!console.group) {
-    return dispatchOriginal;
+    return next;
   }
 
   return (action) => {
     console.group(action.type);
     console.log('%c previous state', 'color: gray', store.getState());
     console.log('%c action', 'color: blue', action);
-    const result = dispatchOriginal(action);
+    const result = next(action);
     console.log('%c next state', 'color: green', store.getState());
     console.groupEnd(action.type);
     return result;
   };
 };
 
-const addPromiseSupportToDispatch = (store) => {
-  const dispatchOriginal = store.dispatch;
+const promise = (store) => (next) => (action) => {
+  if (typeof action.then === 'function') {
+    return action.then(next);
+  }
 
-  return (action) => {
-    if (typeof action.then === 'function') {
-      return action.then(dispatchOriginal);
-    }
+  return next(action);
+}
 
-    return dispatchOriginal(action);
-  };
+const wrapDispatchWithMiddlewares = (store, middlewares) => {
+  middlewares.slice().reverse().forEach(middleware =>
+    store.dispatch = middleware(store)(store.dispatch)
+  )
 };
 
 const configureStore = () => {
-  const persistedState = loadState();
-
-  const store = createStore(todoApp, persistedState);
+  const store = createStore(todoApp);
+  const middlewares = [promise];
 
   if (process.env.NODE_ENV !== 'production') {
-    store.dispatch = addLoggingToDispatch(store);
+    middlewares.push(logger);
   }
 
-  store.dispatch = addPromiseSupportToDispatch(store);
-
-  // store.subscribe(throttle(() => {
-  //   saveState({
-  //       todos: store.getState().todos
-  //   });
-  // }, 1000));
+  wrapDispatchWithMiddlewares(store, middlewares);
 
   return store;
 }
