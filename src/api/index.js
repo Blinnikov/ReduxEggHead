@@ -22,7 +22,7 @@ export const fetchTodos = (filter) =>
   delay(500).then(() => {
     switch (filter) {
       case 'all':
-        return fakeDatabase;
+        return fakeDatabase.todos;
       case 'active':
         return fakeDatabase.todos.filter(t => !t.completed);
       case 'completed':
