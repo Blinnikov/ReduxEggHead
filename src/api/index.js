@@ -21,9 +21,9 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 export const fetchTodos = (filter) =>
   delay(500).then(() => {
 
-    if (Math.random() > 0.5) {
-      throw new Error('Server error 500');
-    }
+    // if (Math.random() > 0.5) {
+    //   throw new Error('Server error 500');
+    // }
 
     switch (filter) {
       case 'all':
