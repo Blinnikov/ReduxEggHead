@@ -20,13 +20,12 @@ export const fetchTodos = (filter) => (dispatch, getState) => {
         filter,
         response: normalize(response, schema.arrayOfTodos)
       }),
-    error => {
+    error =>
       dispatch({
         type: 'FETCH_TODOS_FAILURE',
         filter,
         message: error.message || 'Something went wrong.'
       })
-    }
   );
 };
 
